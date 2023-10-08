@@ -11,4 +11,5 @@ public interface AgenceInterface {
     Optional<Agence> searchByCode(String code);
     Optional<Agence> searchByAdress(String adress);
     Optional<Agence> update(Agence agence,String code);
+    Optional<Agence> getOne(String code);
 }

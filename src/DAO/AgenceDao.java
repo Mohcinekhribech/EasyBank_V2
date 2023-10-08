@@ -17,7 +17,7 @@ public class AgenceDao implements AgenceInterface {
     public Optional<Agence> add(Agence agence) {
         try {
             PreparedStatement statement = this.Connection
-                    .prepareStatement("insert into agence (code,name,adress,phonenumber) values (?,?,?,?)");
+                    .prepareStatement("insert into agence (code,name,address,phonenumber) values (?,?,?,?)");
             statement.setString(1, agence.getCode());
             statement.setString(2, agence.getName());
             statement.setString(3, agence.getAdress());
@@ -52,7 +52,7 @@ public class AgenceDao implements AgenceInterface {
             {
                 Agence agence = new Agence();
                 agence.setCode(code);
-                agence.setAdress(resultSet.getString("adress"));
+                agence.setAdress(resultSet.getString("address"));
                 agence.setName(resultSet.getString("name"));
                 agence.setPhoneNumber(resultSet.getString("phoneNumber"));
                return Optional.of(agence);
@@ -66,7 +66,7 @@ public class AgenceDao implements AgenceInterface {
     @Override
     public Optional<Agence> searchByAdress(String adress) {
         try {
-            PreparedStatement statement = this.Connection.prepareStatement("select * from agence where adress = ?");
+            PreparedStatement statement = this.Connection.prepareStatement("select * from agence where address = ?");
             statement.setString(1, adress);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next())
@@ -87,12 +87,32 @@ public class AgenceDao implements AgenceInterface {
     @Override
     public Optional<Agence> update(Agence agence,String code) {
         try {
-           PreparedStatement statement = this.Connection.prepareStatement("update agence set name = ? , adress =? , phoneNumber = ?");
+           PreparedStatement statement = this.Connection.prepareStatement("update agence set name = ? , address =? , phoneNumber = ?");
            statement.setString(1,agence.getName());
            statement.setString(2,agence.getAdress());
            statement.setString(3,agence.getPhoneNumber());
            if(statement.executeUpdate()>0)
           return Optional.of(agence);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+    public Optional<Agence> getOne(String code)
+    {
+        try {
+            PreparedStatement statement = this.Connection.prepareStatement("select * from agence where code = ?");
+            statement.setString(1, code);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next())
+            {
+                Agence agence = new Agence();
+                agence.setAdress(resultSet.getString("address"));
+                agence.setCode(code);
+                agence.setName(resultSet.getString("name"));
+                agence.setPhoneNumber("phoneNumber");
+                return Optional.of(agence);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
