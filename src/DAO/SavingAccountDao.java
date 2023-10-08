@@ -1,7 +1,9 @@
 package DAO;
 
+import DTO.Client;
 import DTO.CurrentAccount;
 import DTO.SavingAccount;
+import DTO.Enum.Status;
 import Helpers.Database;
 import Interfaces.SavingAccountInterface;
 
@@ -12,10 +14,16 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
-public class SavingAccountDao implements SavingAccountInterface {
+public class SavingAccountDao extends AccountDao implements SavingAccountInterface {
     Connection connection = Database.ConnectToDb();
+    public SavingAccountDao(Client client) {
+        super(client);
+    }
+    public SavingAccountDao() {
+    }
     @Override
-    public Optional<SavingAccount> add(Optional<SavingAccount> account) throws SQLException {
+    public Optional<SavingAccount> add(Optional<SavingAccount> account)  {
+        try{
         if(account.isPresent()) {
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement("INSERT INTO account (accountNumber, balance, creationDate, client_code,status) VALUES (?, ?, ?, ?,?::status)");
@@ -37,11 +45,16 @@ public class SavingAccountDao implements SavingAccountInterface {
             }
         }
         connection.rollback();
+    }catch(SQLException e)
+    {
+        e.printStackTrace();
+    }
         return Optional.empty();
     }
 
     @Override
-    public Optional<SavingAccount> update(Optional<SavingAccount> account,String code) throws SQLException {
+    public Optional<SavingAccount> update(Optional<SavingAccount> account,String code)  {
+        try{
         connection.setAutoCommit(false);
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE  account set  balance= ?, creationDate=? , status = ? where client_code = ? ");
@@ -61,31 +74,37 @@ public class SavingAccountDao implements SavingAccountInterface {
             }
         }
         connection.rollback();
+    }catch(SQLException e)
+    {
+        e.printStackTrace();
+    }
         return Optional.empty();
     }
 
     @Override
-    public List<Map<String, String>> searchByClient(String clientCode) {
-        Map<String,String> client = new HashMap<>();
-        List<Map<String,String>> clients = new ArrayList<>();
+    public List<SavingAccount> searchByClient(String clientCode) {
+        List<SavingAccount> accounts = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM account AS acc INNER JOIN savingAccount as sv ON sv.id = acc.accountNumber  where acc.client_code = ?;");
             statement.setString(1,clientCode);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
-                client.put("accountNumber",resultSet.getString("accountNumber"));
-                client.put("balance",resultSet.getString("balance"));
-                client.put("creationDate",resultSet.getString("creationDate"));
-                client.put("client_code",resultSet.getString("client_code"));
-                client.put("status",resultSet.getString("status"));
-                client.put("interestRate",resultSet.getString("interestrate"));
-                clients.add(client);
+                SavingAccount account = new SavingAccount();
+                account.setAccountNumber(resultSet.getString("accountNumber"));
+                account.setBalance(resultSet.getDouble("balance"));
+                account.setCreationDate(LocalDate.parse(resultSet.getString("crationDate")));
+                account.setStatus(Status.valueOf(resultSet.getString("status")));
+                account.setInterestRate(resultSet.getDouble("interesrate"));
+                client.setFirstName(resultSet.getString("firstName"));
+                client.setLastName(resultSet.getString("lastName"));
+                account.setClient(client);
+                accounts.add(account);
             }
         }catch(Exception e)
         {
             e.printStackTrace();
         }
-        return clients;
+        return accounts;
     }
 
 

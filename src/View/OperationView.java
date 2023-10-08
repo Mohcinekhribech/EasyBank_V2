@@ -1,7 +1,8 @@
-package Services;
+package View;
 
 import DAO.OperationDao;
 import DTO.Account;
+import DTO.CurrentAccount;
 import DTO.Employee;
 import DTO.Enum.OperationType;
 import DTO.Operation;
@@ -10,19 +11,20 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class OperationService {
+public class OperationView {
     Scanner scanner ;
     Operation operation;
     OperationDao operationDao;
-    public OperationService(Operation operation , OperationDao operationDao ,Scanner scanner)
+    public OperationView(Operation operation , OperationDao operationDao ,Scanner scanner)
     {
         this.operation = operation;
         this.operationDao = operationDao;
         this.scanner = scanner;
     }
-    public void menu() throws SQLException {
+    public void menu()  {
         int choice;
         System.out.println("-------------------------------------------------------------------------");
         System.out.println(". 1 - Ajouter une opperation        2 - Supprimer opperation            .");
@@ -41,10 +43,10 @@ public class OperationService {
                 break;
         }
     }
-    private void addOperation() throws SQLException {
+    private void addOperation()  {
         int status;
         Employee employee = new Employee();
-        Account account = new Account();
+        CurrentAccount account = new CurrentAccount();
 
         System.out.println("entrer votre matricule : ");
         employee.setRegistrationNumber(scanner.next());
@@ -78,14 +80,14 @@ public class OperationService {
     private void searchOperationBynum()
     {
         System.out.print("Entrer le numero d'operation : ");
-        Map<String,String> operations= operationDao.searchOperationByNum(scanner.nextInt());;
+        Optional<Operation> operations= operationDao.searchOperationByNum(scanner.nextInt());;
         if(operations.isEmpty())
             System.out.println("Il n'y a pas une operation avec cette numero");
         else
         {
-                for(String keys: operations.keySet()){
-                    System.out.println(keys+ " : "  +operations.get(keys));
-                }
+                // for(String keys: operations.keySet()){
+                //     System.out.println(keys+ " : "  +operations.get(keys));
+                // }
         }
     }
 }

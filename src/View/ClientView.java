@@ -1,4 +1,4 @@
-package Services;
+package View;
 
 import DAO.ClientDao;
 import DAO.EmployeDao;
@@ -12,17 +12,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class ClientService {
+public class ClientView {
     private Client client ;
     private ClientDao clientDao;
     Scanner scanner ;
-    public ClientService(Client client , ClientDao clientDao,Scanner scanner)
+    public ClientView(Client client , ClientDao clientDao,Scanner scanner)
     {
         this.client = client;
         this.clientDao = clientDao;
         this.scanner = scanner;
     }
-    public void menu() throws SQLException {
+    public void menu()  {
         int choice;
         System.out.println("--------------------------------------------------------------------------");
         System.out.println(". 1 - Ajouter client                    2 - Supprimer client              .");
@@ -49,7 +49,7 @@ public class ClientService {
                 break;
         }
     }
-    public void addClient() throws SQLException {
+    public void addClient()  {
         System.out.print("Entrer le prenom : ");
         client.setFirstName(scanner.next());
         System.out.print("Entrer le nom :");
@@ -68,17 +68,17 @@ public class ClientService {
             System.out.println("client "+client.getFirstName() +" n'est pas ajouté");
     }
 
-    public void deleteClient() throws SQLException {
+    public void deleteClient()  {
         System.out.print("Entrer le Matricule : ");
         if(clientDao.delete(scanner.next())>0)
             System.out.println("le client est supprimé");
         else
             System.out.println("le client n'est pas supprimé");
     }
-    public void updateClient() throws SQLException {
+    public void updateClient()  {
         System.out.print("Entrer le Matricule : ");
         client.setCode(scanner.next());
-        client = (Client) clientDao.Search(client);
+        client = clientDao.Search(client).get(0);
         System.out.print("Entrer le prenom : ");
         client.setFirstName(scanner.next());
         System.out.print("Entrer le nom :");
@@ -134,29 +134,29 @@ public class ClientService {
                 break;
             } default: choice = scanner.nextInt();
         }
-        List<Map<String,String>> employes= clientDao.Search(client);
-        for (int i=0 ; i<employes.size();i++)
-            for(String keys: employes.get(i).keySet()){
-                System.out.println(keys+ " : "  +employes.get(i).get(keys));
-            }
+        List<Client> clients= clientDao.Search(client);
+        // for (int i=0 ; i<clients.size();i++)
+        //     for(String keys: clients.get(i).keySet()){
+        //         System.out.println(keys+ " : "  +clients.get(i).get(keys));
+        //     }
     }
     public void showClients()
     {
-        List<Map<String,String>> employes= clientDao.showClients();
-        for (int i=0 ; i<employes.size();i++)
-            for(String keys: employes.get(i).keySet()){
-                System.out.println(keys+ " : "  +employes.get(i).get(keys));
-            }
+        List<Client> clients= clientDao.showClients();
+        // for (int i=0 ; i<employes.size();i++)
+        //     for(String keys: employes.get(i).keySet()){
+        //         System.out.println(keys+ " : "  +employes.get(i).get(keys));
+        //     }
     }
     public void searchClientByCode()
     {
         System.out.print("Entrer le matricule de l'employe : ");
-        Map<String,String> employe = clientDao.searchByCode(scanner.next());
+        Client employe = clientDao.searchByCode(scanner.next()).get();
 
-        if(employe!=null)
-            for(String keys: employe.keySet()){
-                System.out.println("- "+ keys+ " : "  +employe.get(keys));
-            }
-        else System.out.println("ce employe n'existe pas");
+        // if(employe!=null)
+            // for(String keys: employe.keySet()){
+            //     System.out.println("- "+ keys+ " : "  +employe.get(keys));
+            // }
+        // else System.out.println("ce employe n'existe pas");
     }
 }

@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface ClientInterface {
-    Optional<Client> add(Optional<Client> client) throws SQLException;
+    Optional<Client> add(Optional<Client> client);
     int delete(String code);
-    Optional<Client> update(Client client,String code) throws SQLException;
-    Map<String,String> searchByCode(String code);
-    List<Map<String,String>> showClients();
+    Optional<Client> update(Client client,String code);
+    Optional<Client> searchByCode(String code);
+    List<Client> showClients();
 }

@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface AffectationInterface {
-    Optional<Affectation> add(Affectation affectation) throws SQLException;
-    int delete(int id) throws SQLException;
-    List<Map<String, String>> historicalAffectation(String registrationNumber) throws SQLException;
-    Map<String, Integer> statisticsAffectation() throws SQLException;
+    Optional<Affectation> add(Affectation affectation);
+    int delete(int id);
+    List<Affectation> historicalAffectation(String registrationNumber);
+    Map<String, Integer> statisticsAffectation();
 }

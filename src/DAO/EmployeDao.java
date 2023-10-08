@@ -1,5 +1,6 @@
 package DAO;
 
+import DTO.Client;
 import DTO.Employee;
 import Helpers.Database;
 import Interfaces.EmployeInterface;
@@ -12,7 +13,8 @@ import java.util.*;
 public class EmployeDao implements EmployeInterface {
     Connection connection = Database.ConnectToDb();
     @Override
-    public Optional<Employee> add(Optional<Employee> employee) throws SQLException {
+    public Optional<Employee> add(Optional<Employee> employee)  {
+        try{
         if(employee.isPresent()) {
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement("INSERT INTO person (firstName, lastName, dateofbirth, phonenumber) VALUES (?, ?, ?, ?)");
@@ -37,6 +39,10 @@ public class EmployeDao implements EmployeInterface {
             }
         }
         connection.rollback();
+    }catch(SQLException e)
+    {
+        e.printStackTrace();
+    }
         return Optional.empty();
     }
 
@@ -53,7 +59,8 @@ public class EmployeDao implements EmployeInterface {
     }
 
     @Override
-    public Optional<Employee> update(Employee employee, String registrationNumber) throws SQLException {
+    public Optional<Employee> update(Employee employee, String registrationNumber)  {
+        try{
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement("UPDATE  person set  firstName= ?, lastName=? , dateofbirth = ?, phonenumber = ? where id = (select id from employe where registrationNumber = ?) ");
             statement.setString(1, employee.getFirstName());
@@ -74,6 +81,10 @@ public class EmployeDao implements EmployeInterface {
                 }
             }
         connection.rollback();
+        }catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
         return Optional.empty();
     }
 
@@ -102,8 +113,8 @@ public class EmployeDao implements EmployeInterface {
     }
 
     @Override
-    public List<Map<String , String>> Search(Employee employee) {
-        List<Map<String , String>> employes = new ArrayList<>();
+    public List<Employee> Search(Employee employee) {
+        List<Employee> employes = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM person AS pr INNER JOIN employe as em ON em.id = pr.id  where em.registrationNumber = ? OR firstname = ? OR lastName = ? OR phonenumber = ? OR dateOfBirth = ? OR recrutmentDate = ? OR email = ?;");
             statement.setString(1,employee.getRegistrationNumber());
@@ -115,14 +126,14 @@ public class EmployeDao implements EmployeInterface {
             statement.setString(7,employee.getEmail());
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
-                Map<String,String> employe = new HashMap<>();
-                employe.put("registrationNumber",resultSet.getString("registrationNumber"));
-                employe.put("firstName",resultSet.getString("firstName"));
-                employe.put("lastName",resultSet.getString("lastName"));
-                employe.put("dateOfBirth",resultSet.getString("dateOfBirth"));
-                employe.put("phoneNumber",resultSet.getString("phoneNumber"));
-                employe.put("recrutmentDate",resultSet.getString("recrutmentDate"));
-                employe.put("email",resultSet.getString("email"));
+                Employee employe = new Employee();
+                employe.setEmail(resultSet.getString("email"));
+                employe.setRegistrationNumber(resultSet.getString("registrationNumber"));
+                employe.setDateOfBirth(LocalDate.parse(resultSet.getString("dateOfBirth")));
+                employe.setRecruitmentDate(LocalDate.parse(resultSet.getString("recruitmentDate")));
+                employe.setFirstName(resultSet.getString("firstName"));
+                employe.setLastName(resultSet.getString("lastName"));
+                employe.setPhoneNumber(resultSet.getString("phoneNumber"));
                 employes.add(employe);
             }
             return employes;
@@ -134,28 +145,27 @@ public class EmployeDao implements EmployeInterface {
     }
 
     @Override
-    public List<Map<String, String>> getAll() {
-        List<Map<String,String>> employes = new ArrayList<>();
+    public List<Employee> getAll() {
+        List<Employee> employes = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM person AS pr INNER JOIN employe as em ON em.id = pr.id ;");
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
-                Map<String,String> employe = new HashMap<>();
-                employe.put("firstName",resultSet.getString("firstName"));
-                employe.put("lastName",resultSet.getString("lastName"));
-                employe.put("dateOfBirth",resultSet.getString("dateOfBirth"));
-                employe.put("phoneNumber",resultSet.getString("phoneNumber"));
-                employe.put("registrationNumber",resultSet.getString("registrationNumber"));
-                employe.put("recrutmentDate",resultSet.getString("recrutmentDate"));
-                employe.put("email",resultSet.getString("email"));
-                employes.add(employe);
+               Employee employee = new Employee();
+                employee.setEmail(resultSet.getString("email"));
+                employee.setRegistrationNumber(resultSet.getString("registrationNumber"));
+                employee.setDateOfBirth(LocalDate.parse(resultSet.getString("dateOfBirth")));
+                employee.setRecruitmentDate(LocalDate.parse(resultSet.getString("recruitmentDate")));
+                employee.setFirstName(resultSet.getString("firstName"));
+                employee.setLastName(resultSet.getString("lastName"));
+                employee.setPhoneNumber(resultSet.getString("phoneNumber"));
+                employes.add(employee);
             }
-            return employes;
         }catch(Exception e)
         {
             e.printStackTrace();
         }
-        return null;
+        return employes;
     }
 
 }

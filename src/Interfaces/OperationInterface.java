@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface OperationInterface {
-    Optional<Operation> add(Operation operation) throws SQLException;
+    Optional<Operation> add(Operation operation);
     int delete(int operationNumber);
     List<Operation> searchOperation(Operation operation);
-    Map<String,String> searchOperationByNum(int operationNumber);
+    Optional<Operation> searchOperationByNum(int operationNumber);
 
 }

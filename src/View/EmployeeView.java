@@ -1,4 +1,4 @@
-package Services;
+package View;
 
 import DAO.EmployeDao;
 import DTO.Employee;
@@ -10,17 +10,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class EmployeeService {
+public class EmployeeView {
     private Employee employee ;
     private EmployeDao employeDao;
     Scanner scanner = new Scanner(System.in);
-    public EmployeeService(Employee employee , EmployeDao employeDao,Scanner scanner)
+    public EmployeeView(Employee employee , EmployeDao employeDao,Scanner scanner)
     {
         this.employee = employee;
         this.employeDao = employeDao;
         this.scanner = scanner;
     }
-    public void menu() throws SQLException {
+    public void menu()  {
         int choice;
         System.out.println("--------------------------------------------------------------------------");
         System.out.println(". 1 - Ajouter employée                  2 - Supprimer employe            .");
@@ -47,7 +47,7 @@ public class EmployeeService {
             break;
         }
     }
-    public void addEmploye() throws SQLException {
+    public void addEmploye()  {
         System.out.print("Entrer le prenom : ");
         employee.setFirstName(scanner.next());
         System.out.print("Entrer le nom :");
@@ -66,17 +66,17 @@ public class EmployeeService {
             System.out.println("employe "+employee.getFirstName() +" n'est pas ajouté");
     }
 
-    public void deleteEmploye() throws SQLException {
+    public void deleteEmploye()  {
         System.out.print("Entrer le Matricule : ");
         if(employeDao.delete(scanner.next())>0)
             System.out.println("employe est supprimé");
         else
             System.out.println("employe n'est pas supprimé");
     }
-    public void updateEmploye() throws SQLException {
+    public void updateEmploye()  {
         System.out.print("Entrer le Matricule : ");
         employee.setRegistrationNumber(scanner.next());
-        employee = (Employee) employeDao.Search(employee);
+        employee = employeDao.Search(employee).get(0);
         System.out.print("Entrer le prenom : ");
         employee.setFirstName(scanner.next());
         System.out.print("Entrer le nom :");
@@ -137,23 +137,23 @@ public class EmployeeService {
                 break;
             } default: choice = scanner.nextInt();
         }
-        List<Map<String,String>> employes= employeDao.Search(employee);
-        for (int i=0 ; i<employes.size();i++){
-            System.out.println("---------------------------------");
-            for(String keys: employes.get(i).keySet()){
-                System.out.println(keys+ " : "  +employes.get(i).get(keys));
-            }
+        List<Employee> employes= employeDao.Search(employee);
+        // for (int i=0 ; i<employes.size();i++){
+        //     System.out.println("---------------------------------");
+        //     for(String keys: employes.get(i).keySet()){
+        //         System.out.println(keys+ " : "  +employes.get(i).get(keys));
+        //     }
         }
-    }
+    
     public void showEmployes()
     {
-        List<Map<String,String>> employes= employeDao.getAll();
-        for (int i=0 ; i<employes.size();i++){
-            System.out.println("---------------------------------");
-            for(String keys: employes.get(i).keySet()){
-                System.out.println(keys+ " : "  +employes.get(i).get(keys));
-            }
-        }
+        List<Employee> employes= employeDao.getAll();
+        // for (int i=0 ; i<employes.size();i++){
+        //     System.out.println("---------------------------------");
+        //     for(String keys: employes.get(i).keySet()){
+        //         System.out.println(keys+ " : "  +employes.get(i).get(keys));
+        //     }
+        // }
     }
     public void searchEmployeByMatricule()
     {

@@ -1,4 +1,4 @@
-package Services.AccountServices;
+package View.AccountViews;
 
 import DAO.CurrentAccountDao;
 import DAO.SavingAccountDao;
@@ -13,16 +13,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class CurrentAccountService {
+public class CurrentAccountView {
     Scanner scanner = new Scanner(System.in);
     CurrentAccount currentAccount = new CurrentAccount();
     CurrentAccountDao currentAccountDao = new CurrentAccountDao();
-    CurrentAccountService(CurrentAccount currentAccount,CurrentAccountDao currentAccountDao)
+    CurrentAccountView(CurrentAccount currentAccount,CurrentAccountDao currentAccountDao)
     {
         this.currentAccount = currentAccount;
         this.currentAccountDao = currentAccountDao;
     }
-    public void menu() throws SQLException {
+    public void menu()  {
         int choice ;
         System.out.println("--------------------------------------------------------------------------");
         System.out.println(". 1 - Créer un compte           2 - chercher un compte par client        .");
@@ -41,7 +41,7 @@ public class CurrentAccountService {
             break;
         }
     }
-    public void addAccount() throws SQLException {
+    public void addAccount()  {
         Client client=new Client(); 
         System.out.print("Entrer le nombre du compte : ");
         currentAccount.setAccountNumber(scanner.next());
@@ -60,7 +60,7 @@ public class CurrentAccountService {
         else
             System.out.println("le compte "+currentAccount.getAccountNumber()   +" n'est pas crée");
     }
-    public void updateAccount() throws SQLException {
+    public void updateAccount()  {
         System.out.print("Entrer le nombre du compte : ");
         currentAccount.setAccountNumber(scanner.next());
         System.out.print("Entrer le solde :");
@@ -81,16 +81,16 @@ public class CurrentAccountService {
     public void searchByClient()
     {
         System.out.println("Entrer le code de  client : ");
-        List<Map<String,String>> accounts= currentAccountDao.searchByClient(scanner.next());
+        List<CurrentAccount> accounts= currentAccountDao.searchByClient(scanner.next());
 
         if(accounts.isEmpty())
             System.out.println("le compte est indisponible");
         else
         {
-            for (int i=0 ; i<accounts.size();i++)
-                for(String keys: accounts.get(i).keySet()){
-                    System.out.println(keys+ " : "  +accounts.get(i).get(keys));
-                }
+            // for (int i=0 ; i<accounts.size();i++)
+            //     for(String keys: accounts.get(i).keySet()){
+            //         System.out.println(keys+ " : "  +accounts.get(i).get(keys));
+            //     }
         }
 
     }

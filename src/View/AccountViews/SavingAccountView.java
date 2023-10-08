@@ -1,4 +1,4 @@
-package Services.AccountServices;
+package View.AccountViews;
 
 import DAO.SavingAccountDao;
 import DTO.Enum.Status;
@@ -11,16 +11,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class SavingAccountService {
+public class SavingAccountView {
     Scanner scanner = new Scanner(System.in);
     SavingAccountDao savingAccountDao ;
     SavingAccount savingAccount ;
-    public SavingAccountService(SavingAccount savingAccount,SavingAccountDao savingAccountDao)
+    public SavingAccountView(SavingAccount savingAccount,SavingAccountDao savingAccountDao)
     {
         this.savingAccountDao = savingAccountDao;
         this.savingAccount = savingAccount;
     }
-    public void menu() throws SQLException {
+    public void menu()  {
         int choice ;
         System.out.println("--------------------------------------------------------------------------");
         System.out.println(". 1 - Créer un compte           2 - chercher un compte par client        .");
@@ -39,7 +39,7 @@ public class SavingAccountService {
                 break;
         }
     }
-    public void addAccount() throws SQLException {
+    public void addAccount()  {
         System.out.print("Entrer le nombre du compte : ");
         savingAccount.setAccountNumber(scanner.next());
         System.out.print("Entrer le solde :");
@@ -56,7 +56,7 @@ public class SavingAccountService {
         else
             System.out.println("le compte "+savingAccount.getAccountNumber()   +" n'est pas crée");
     }
-    public void updateAccount() throws SQLException {
+    public void updateAccount()  {
         System.out.print("Entrer le nombre du compte : ");
         savingAccount.setAccountNumber(scanner.next());
         System.out.print("Entrer le solde :");
@@ -77,16 +77,16 @@ public class SavingAccountService {
     public void searchByClient()
     {
         System.out.println("Entrer le code de  client : ");
-        List<Map<String,String>> accounts= savingAccountDao.searchByClient(scanner.next());
+        List<SavingAccount> accounts= savingAccountDao.searchByClient(scanner.next());
 
         if(accounts.isEmpty())
             System.out.println("le compte est indisponible");
         else
         {
-            for (int i=0 ; i<accounts.size();i++)
-                for(String keys: accounts.get(i).keySet()){
-                    System.out.println(keys+ " : "  +accounts.get(i).get(keys));
-                }
+            // for (int i=0 ; i<accounts.size();i++)
+            //     for(String keys: accounts.get(i).keySet()){
+            //         System.out.println(keys+ " : "  +accounts.get(i).get(keys));
+            //     }
         }
 
     }

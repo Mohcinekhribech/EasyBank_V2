@@ -1,12 +1,7 @@
 package DTO;
 
-public class SavingAccount extends Account{
-    private double interestRate ;
-    public double getInterestRate() {
-        return interestRate;
-    }
+import lombok.Data;
 
-    public void setInterestRate(double interestRate) {
-        this.interestRate = interestRate;
-    }
+public final @Data class SavingAccount extends Account{
+    private double interestRate ;
 }

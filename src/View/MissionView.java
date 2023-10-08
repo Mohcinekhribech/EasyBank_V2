@@ -1,4 +1,4 @@
-package Services;
+package View;
 
 import DAO.AffectationDao;
 import DAO.MissionDao;
@@ -12,20 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class MissionService {
+public class MissionView {
     Scanner scanner = new Scanner(System.in);
-    Mission mission ;
-    MissionDao missionDao;
-    Affectation affectation ;
-    AffectationDao affectationDao ;
-    public MissionService(Mission mission,MissionDao missionDao,Affectation affectation ,AffectationDao affectationDao)
-    {
-        this.mission = mission;
-        this.missionDao = missionDao;
-        this.affectation = affectation;
-        this.affectationDao=affectationDao;
-    }
-    public void menu() throws SQLException {
+    Mission mission = new Mission();
+    MissionDao missionDao = new MissionDao();
+    Affectation affectation = new Affectation();
+    AffectationDao affectationDao =new AffectationDao();
+
+    public void menu()  {
         int choice;
         System.out.println("-------------------------------------------------------------------------");
         System.out.println(". 1 - Ajouter une mission            2 - Supprimer mission               .");
@@ -53,22 +47,22 @@ public class MissionService {
             break; 
         }
     }
-    private  void historicalAffectation() throws SQLException
+    private  void historicalAffectation()
     {
         System.out.print("Eanter le matricule du employe : ");
-        List<Map<String,String>> affectations = affectationDao.historicalAffectation(scanner.next());
+        List<Affectation> affectations = affectationDao.historicalAffectation(scanner.next());
         if(affectations.isEmpty())
             System.out.println("Il n'y a pas des mission");
         else
         {
-            for (int i=0 ; i<affectations.size();i++){
-                for(String keys: affectations.get(i).keySet()){
-                    System.out.println(keys+ " : "  +affectations.get(i).get(keys));
-                }
-            }
+            // for (int i=0 ; i<affectations.size();i++){
+            //     for(String keys: affectations.get(i).keySet()){
+            //         System.out.println(keys+ " : "  +affectations.get(i).get(keys));
+            //     }
+            // }
         }
     }
-    private void statisticsAffectation() throws SQLException
+    private void statisticsAffectation()
     {
         Map<String,Integer> affectations = affectationDao.statisticsAffectation();
         if(affectations.isEmpty())
@@ -80,7 +74,7 @@ public class MissionService {
                 }
         }
     }
-    private void addAffectation() throws SQLException {
+    private void addAffectation()  {
         Employee employee = new Employee();
         System.out.print("Entrer le code du mission :");
         mission.setCode(scanner.next());
@@ -97,13 +91,13 @@ public class MissionService {
         else System.out.println("la mission n'a pas affectué");
 
     }
-    private void deleteAffectation() throws SQLException {
+    private void deleteAffectation()  {
         System.out.print("Entrer id  du affectation :");
         if(affectationDao.delete(scanner.nextInt())>0)
             System.out.println("affectation est supprimé");
         else System.out.println("affectation n'a pas supprimé");
     }
-    private void addMission() throws SQLException {
+    private void addMission()  {
         System.out.println("Entrer le code du la mission : ");
         mission.setCode(scanner.next());
         System.out.println("Entrer un nom du mission : ");
@@ -123,16 +117,16 @@ public class MissionService {
     }
     private void  showMissions()
     {
-        List<Map<String,String>> missions= missionDao.getAll();
+        List<Mission> missions= missionDao.getAll();
         if(missions.isEmpty())
             System.out.println("Il n'y a pas des mission");
         else
         {
-            for (int i=0 ; i<missions.size();i++){
-                for(String keys: missions.get(i).keySet()){
-                    System.out.println(keys+ " : "  +missions.get(i).get(keys));
-                }
-            }
+            // for (int i=0 ; i<missions.size();i++){
+            //     for(String keys: missions.get(i).keySet()){
+            //         System.out.println(keys+ " : "  +missions.get(i).get(keys));
+            //     }
+            // }
         }
     }
 

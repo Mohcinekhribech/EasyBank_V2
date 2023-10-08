@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface EmployeInterface {
-    Optional<Employee> add(Optional<Employee> employee) throws SQLException;
+    Optional<Employee> add(Optional<Employee> employee) ;
     int delete(String registrationNumber);
-    Optional<Employee> update(Employee employee,String registrationNumber) throws SQLException;
+    Optional<Employee> update(Employee employee,String registrationNumber) ;
     Map<String,String> SearchByRegistrationNumber(String registratonNumber);
-    List<Map<String,String>> Search(Employee employee);
-    List<Map<String,String>> getAll() ;
+    List<Employee> Search(Employee employee);
+    List<Employee> getAll() ;
 }

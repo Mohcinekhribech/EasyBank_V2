@@ -6,12 +6,14 @@ import Interfaces.ClientInterface;
 
 import java.sql.*;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 public class ClientDao implements ClientInterface {
     Connection connection = Database.ConnectToDb();
     @Override
-    public Optional<Client> add(Optional<Client> client) throws SQLException {
+    public Optional<Client> add(Optional<Client> client)  {
+        try{
         if(client.isPresent()) {
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement("INSERT INTO person (firstName, lastName, dateofbirth, phonenumber) VALUES (?, ?, ?, ?)");
@@ -32,9 +34,13 @@ public class ClientDao implements ClientInterface {
                     connection.commit();
                     return client;
                 }
+                connection.rollback();
             }
         }
-        connection.rollback();
+    }catch(SQLException e)
+    {
+        e.printStackTrace();
+    }
         return Optional.empty();
     }
     @Override
@@ -50,7 +56,8 @@ public class ClientDao implements ClientInterface {
     }
 
     @Override
-    public Optional<Client> update(Client client, String code) throws SQLException {
+    public Optional<Client> update(Client client, String code)  {
+        try{
         connection.setAutoCommit(false);
         PreparedStatement statement = connection.prepareStatement("UPDATE  person set  firstName= ?, lastName=? , dateofbirth = ?, phonenumber = ? where id = (select id from client where code = ?) ");
         statement.setString(1, client.getFirstName());
@@ -70,24 +77,28 @@ public class ClientDao implements ClientInterface {
             }
         }
         connection.rollback();
+    }catch(SQLException e)
+    {
+        e.printStackTrace();
+    }
         return Optional.empty();
     }
 
     @Override
-    public Map<String,String> searchByCode(String code) {
-        Map<String,String> client = new HashMap<>();
+    public Optional<Client> searchByCode(String code) {
+        Client client = new Client();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM person AS pr INNER JOIN client as c ON c.id = pr.id  where c.code = ?;");
             statement.setString(1,code);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
-                client.put("firstName",resultSet.getString("firstName"));
-                client.put("lastName",resultSet.getString("lastName"));
-                client.put("dateOfBirth",resultSet.getString("dateOfBirth"));
-                client.put("phoneNumber",resultSet.getString("phoneNumber"));
-                client.put("code",resultSet.getString("code"));
-                client.put("adress",resultSet.getString("adress"));
-                return client;
+                client.setAdress(resultSet.getString("adress"));
+                client.setCode(code);
+                client.setDateOfBirth(LocalDate.parse(resultSet.getString("dateOfBirth")));
+                client.setFirstName(resultSet.getString("firstName"));
+                client.setLastName(resultSet.getString("lastName"));
+                client.setPhoneNumber(resultSet.getString("phoneNumber"));
+                return Optional.of(client);
             }
         }catch(Exception e)
         {
@@ -95,9 +106,8 @@ public class ClientDao implements ClientInterface {
         }
         return null;
     }
-    public List<Map<String , String>> Search(Client client) {
-        Map<String,String> cl = new HashMap<>();
-        List<Map<String , String>> clients = new ArrayList<>();
+    public List<Client> Search(Client client) {
+        List<Client> clients = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM person AS pr INNER JOIN client as cl ON cl.id = pr.id  where cl.code = ? OR firstname = ? OR lastName = ? OR phonenumber = ? OR dateOfBirth = ? OR adress = ?;");
             statement.setString(1,client.getCode());
@@ -108,12 +118,13 @@ public class ClientDao implements ClientInterface {
             statement.setString(6,client.getAdress());
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
-                cl.put("firstName",resultSet.getString("firstName"));
-                cl.put("lastName",resultSet.getString("lastName"));
-                cl.put("dateOfBirth",resultSet.getString("dateOfBirth"));
-                cl.put("phoneNumber",resultSet.getString("phoneNumber"));
-                cl.put("code",resultSet.getString("code"));
-                cl.put("adress",resultSet.getString("adress"));
+                Client cl = new Client();
+                cl.setAdress(resultSet.getString("adress"));
+                cl.setCode(resultSet.getString("code"));
+                cl.setDateOfBirth(LocalDate.parse(resultSet.getString("dateOfBirth")));
+                cl.setFirstName(resultSet.getString("firstName"));
+                cl.setLastName(resultSet.getString("lastName"));
+                cl.setPhoneNumber(resultSet.getString("phoneNumber"));
                 clients.add(cl);
             }
             return clients;
@@ -126,19 +137,19 @@ public class ClientDao implements ClientInterface {
 
 
     @Override
-    public List<Map<String , String>> showClients() {
-        Map<String,String> cl = new HashMap<>();
-        List<Map<String , String>> clients = new ArrayList<>();
+    public List<Client> showClients() {
+        List<Client> clients = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM person AS pr INNER JOIN client as cl ON cl.id = pr.id ;");
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
-                cl.put("firstName",resultSet.getString("firstName"));
-                cl.put("lastName",resultSet.getString("lastName"));
-                cl.put("dateOfBirth",resultSet.getString("dateOfBirth"));
-                cl.put("phoneNumber",resultSet.getString("phoneNumber"));
-                cl.put("code",resultSet.getString("code"));
-                cl.put("adress",resultSet.getString("adress"));
+                Client cl = new Client();
+                cl.setAdress(resultSet.getString("adress"));
+                cl.setCode(resultSet.getString("code"));
+                cl.setDateOfBirth(LocalDate.parse(resultSet.getString("dateOfBirth")));
+                cl.setFirstName(resultSet.getString("firstName"));
+                cl.setLastName(resultSet.getString("lastName"));
+                cl.setPhoneNumber(resultSet.getString("phoneNumber"));
                 clients.add(cl);
             }
             return clients;

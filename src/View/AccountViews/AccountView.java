@@ -1,4 +1,4 @@
-package Services.AccountServices;
+package View.AccountViews;
 
 import DAO.AccountDao;
 import DAO.CurrentAccountDao;
@@ -12,23 +12,22 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class AccountService {
-    private AccountDao accountDao;
-    private Account account;
+public class AccountView {
+    private AccountDao accountDao = new AccountDao() {
+        
+    };
+    private Account account = new Account() {
+    };
     private Scanner scanner;
-    public AccountService(AccountDao accountDao, Account account,Scanner scanner)
-    {
-        this.currentAccountService = currentAccountService;
-        this.savingAccountService = savingAccountService;
-        this.accountDao = accountDao;
-        this.account = account;
+    private CurrentAccountView currentAccountService= new CurrentAccountView(new CurrentAccount(),new CurrentAccountDao());
+    private SavingAccountView savingAccountService= new SavingAccountView(new SavingAccount(),new SavingAccountDao());
+    public AccountView(Scanner scanner) {
         this.scanner = scanner;
     }
-    private CurrentAccountService currentAccountService= new CurrentAccountService(new CurrentAccount(),new CurrentAccountDao());
-    private SavingAccountService savingAccountService= new SavingAccountService(new SavingAccount(),new SavingAccountDao());
-    public void menu() throws SQLException {
+    public void menu()  {
         Scanner scanner = new Scanner(System.in);
         int choice ;
         System.out.println("--------------------------------------------------------------------------------------------");
@@ -72,18 +71,18 @@ public class AccountService {
             System.out.println("pour afficher les compte inactive entrer ( 2 ) \n : ");
             status = scanner.nextInt();
         }while (status<3 && status>0);
-        List<Map<String,String>> accounts= accountDao.showByStatus(Status.values()[status-1]);
+        List<Account> accounts= accountDao.showByStatus(Status.values()[status-1]);
         if(accounts.isEmpty())
             System.out.println("le compte est indisponible");
         else
         {
-            for (int i=0 ; i<accounts.size();i++)
-                for(String keys: accounts.get(i).keySet()){
-                    System.out.println(keys+ " : "  +accounts.get(i).get(keys));
-                }
+            // for (int i=0 ; i<accounts.size();i++)
+            //     for(String keys: accounts.get(i).keySet()){
+            //         System.out.println(keys+ " : "  +accounts.get(i).get(keys));
+            //     }
         }
     }
-    public void changeStatus() throws SQLException {
+    public void changeStatus()  {
         int status ;
         System.out.println("Entrer le numero du compte");
         account.setAccountNumber(scanner.next());
@@ -99,37 +98,37 @@ public class AccountService {
     public void showAccountByCreationDate()
     {
         System.out.println("Entrer la date de creation du compte");
-        List<Map<String,String>> accounts= accountDao.showByCreationDate(LocalDate.parse(scanner.next()));
+        List<Account> accounts= accountDao.showByCreationDate(LocalDate.parse(scanner.next()));
         if(accounts.isEmpty())
             System.out.println("Il n'y a pas de compte à cette date");
         else
         {
-            for (int i=0 ; i<accounts.size();i++)
-                for(String keys: accounts.get(i).keySet()){
-                    System.out.println(keys+ " : "  +accounts.get(i).get(keys));
-                }
+            // for (int i=0 ; i<accounts.size();i++)
+            //     for(String keys: accounts.get(i).keySet()){
+            //         System.out.println(keys+ " : "  +accounts.get(i).get(keys));
+            //     }
         }
     }
     public void showAccountByOperationNumber()
     {
         System.out.println("Entrer la date de creation du compte");
-        Map<String,String> account= accountDao.searchByOperationNumber(scanner.nextInt());
+        Optional<Account> account= accountDao.searchByOperationNumber(scanner.nextInt());
         if(account.isEmpty())
             System.out.println("Il n'y a pas de compte à cette date");
         else
         {
-                for(String keys: account.keySet()){
-                    System.out.println(keys+ " : "  +account.get(keys));
-                }
+                // for(String keys: account.keySet()){
+                //     System.out.println(keys+ " : "  +account.get(keys));
+                // }
         }
     }
     public  void show()
     {
-        List<Map<String,String>> accounts= accountDao.show();
-        for (int i=0 ; i<accounts.size();i++)
-            for(String keys: accounts.get(i).keySet()){
-                System.out.println(keys+ " : "  +accounts.get(i).get(keys));
-            }
+        List<Account> accounts= accountDao.show();
+        // for (int i=0 ; i<accounts.size();i++)
+        //     for(String keys: accounts.get(i).keySet()){
+        //         System.out.println(keys+ " : "  +accounts.get(i).get(keys));
+        //     }
     }
 
 }

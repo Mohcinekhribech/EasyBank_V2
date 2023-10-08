@@ -2,26 +2,26 @@ import DAO.*;
 import DTO.*;
 import DTO.Enum.Status;
 import Helpers.Database;
-import Services.AccountServices.AccountService;
-import Services.AccountServices.CurrentAccountService;
-import Services.AccountServices.SavingAccountService;
-import Services.ClientService;
-import Services.EmployeeService;
-import Services.MissionService;
-import Services.OperationService;
+import View.ClientView;
+import View.EmployeeView;
+import View.MissionView;
+import View.OperationView;
+import View.AccountViews.AccountView;
+import View.AccountViews.CurrentAccountView;
+import View.AccountViews.SavingAccountView;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args)  {
         Scanner scanner = new Scanner(System.in);
-        EmployeeService employeeService= new EmployeeService(new Employee(),new EmployeDao(),scanner);
-        ClientService clientService = new ClientService(new Client(),new ClientDao(),scanner);
-        AccountService accountService = new AccountService(new AccountDao(),new Account(),scanner);
-        OperationService operationService = new OperationService(new Operation(),new OperationDao(),scanner);
-        MissionService missionService = new MissionService(new Mission(), new MissionDao(),new Affectation(),new AffectationDao());
+        EmployeeView employeeService= new EmployeeView(new Employee(),new EmployeDao(),scanner);
+        ClientView clientService = new ClientView(new Client(),new ClientDao(),scanner);
+        AccountView accountService = new AccountView(scanner);
+        OperationView operationService = new OperationView(new Operation(),new OperationDao(),scanner);
+        MissionView missionService = new MissionView();
         int choice ;
         do{
         System.out.println("-----------------------------------------------------------------");

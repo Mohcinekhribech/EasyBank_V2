@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface MissionInterface {
-    Optional<Mission> add(Mission mission) throws SQLException;
+    Optional<Mission> add(Mission mission);
     int delete(String code);
-    List<Map<String,String>> getAll();
+    List<Mission> getAll();
 }
