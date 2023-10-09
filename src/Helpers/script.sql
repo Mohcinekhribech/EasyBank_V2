@@ -56,3 +56,8 @@ create table "affectation" (
                                mission_code varchar(100) references mission(code) on delete cascade on update cascade ,
                                emloye_registrationNumber varchar(100) references employe(registrationNumber) on delete cascade on update cascade
 );
+create table employeAffectation (
+                               creationDate date,
+                               agence_code varchar(100) references agence(code) on delete cascade on update cascade ,
+                               employe_registrationNumber varchar(100) references employe(registrationNumber) on delete cascade on update cascade
+);

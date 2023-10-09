@@ -89,21 +89,21 @@ public class EmployeDao implements EmployeInterface {
     }
 
     @Override
-    public Map<String,String> SearchByRegistrationNumber(String registratonNumber){
-        Map<String,String> employe = new HashMap<>();
+    public Optional<Employee> SearchByRegistrationNumber(String registratonNumber){
+        Employee employe = new Employee();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM person AS pr INNER JOIN employe as em ON em.id = pr.id  where em.registrationNumber = ?;");
             statement.setString(1,registratonNumber);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
-                employe.put("firstName",resultSet.getString("firstName"));
-                employe.put("lastName",resultSet.getString("lastName"));
-                employe.put("dateOfBirth",resultSet.getString("dateOfBirth"));
-                employe.put("phoneNumber",resultSet.getString("phoneNumber"));
-                employe.put("registrationNumber",registratonNumber);
-                employe.put("recrutmentDate",resultSet.getString("recrutmentDate"));
-                employe.put("email",resultSet.getString("email"));
-                return employe;
+                employe.setFirstName(resultSet.getString("firstName"));
+                employe.setLastName(resultSet.getString("lastName"));
+                employe.setDateOfBirth(LocalDate.parse(resultSet.getString("dateOfBirth")));
+                employe.setPhoneNumber(resultSet.getString("phoneNumber"));
+                employe.setRegistrationNumber(registratonNumber);
+                employe.setRecruitmentDate(LocalDate.parse(resultSet.getString("recrutmentDate")));
+                employe.setEmail(resultSet.getString("email"));
+                return Optional.of(employe);
             }
         }catch(Exception e)
         {

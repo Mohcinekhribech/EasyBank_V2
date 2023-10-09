@@ -12,7 +12,7 @@ public interface EmployeInterface {
     Optional<Employee> add(Optional<Employee> employee) ;
     int delete(String registrationNumber);
     Optional<Employee> update(Employee employee,String registrationNumber) ;
-    Map<String,String> SearchByRegistrationNumber(String registratonNumber);
+    Optional<Employee> SearchByRegistrationNumber(String registratonNumber);
     List<Employee> Search(Employee employee);
     List<Employee> getAll() ;
 }

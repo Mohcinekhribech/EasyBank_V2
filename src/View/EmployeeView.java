@@ -158,12 +158,12 @@ public class EmployeeView {
     public void searchEmployeByMatricule()
     {
         System.out.print("Entrer le matricule de l'employe : ");
-        Map<String,String> employe = employeDao.SearchByRegistrationNumber(scanner.next());
+        Optional<Employee> employe = employeDao.SearchByRegistrationNumber(scanner.next());
 
-        if(employe!=null)
-             for(String keys: employe.keySet()){
-                 System.out.println("- "+ keys+ " : "  +employe.get(keys));
-             }
-        else System.out.println("ce employe n'existe pas");
+        // if(employe!=null)
+            //  for(String keys: employe.keySet()){
+            //      System.out.println("- "+ keys+ " : "  +employe.get(keys));
+            //  }
+        // else System.out.println("ce employe n'existe pas");
     }
 }
