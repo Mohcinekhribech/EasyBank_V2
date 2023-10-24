@@ -155,7 +155,7 @@ public class EmployeDao implements EmployeInterface {
                 employee.setEmail(resultSet.getString("email"));
                 employee.setRegistrationNumber(resultSet.getString("registrationNumber"));
                 employee.setDateOfBirth(LocalDate.parse(resultSet.getString("dateOfBirth")));
-                employee.setRecruitmentDate(LocalDate.parse(resultSet.getString("recruitmentDate")));
+                employee.setRecruitmentDate(LocalDate.parse(resultSet.getString("recrutmentDate")));
                 employee.setFirstName(resultSet.getString("firstName"));
                 employee.setLastName(resultSet.getString("lastName"));
                 employee.setPhoneNumber(resultSet.getString("phoneNumber"));

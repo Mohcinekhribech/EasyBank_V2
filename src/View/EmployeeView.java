@@ -94,6 +94,15 @@ public class EmployeeView {
         else
             System.out.println("employe "+employee.getFirstName() +" n'est pas modifié");
     }
+    private void afficheEmploye(Employee employee)
+    {
+        System.out.println("------------------------------------");
+        System.out.println("- Nom complet  : " + employee.getFirstName() + " "+employee.getLastName());
+        System.out.println("- date naissance  : " + employee.getDateOfBirth());
+        System.out.println("- N° Matricule :" + employee.getRegistrationNumber());
+        System.out.println("- Email : " + employee.getEmail());
+        System.out.println("------------------------------------");
+    }
     public void searchEmployeByAttribut()
     {
         System.out.println("chercher par : 1-nom 2-prenom 3-email 4-date de recrutment");
@@ -138,32 +147,27 @@ public class EmployeeView {
             } default: choice = scanner.nextInt();
         }
         List<Employee> employes= employeDao.Search(employee);
-        // for (int i=0 ; i<employes.size();i++){
-        //     System.out.println("---------------------------------");
-        //     for(String keys: employes.get(i).keySet()){
-        //         System.out.println(keys+ " : "  +employes.get(i).get(keys));
-        //     }
+        for(int i =0;i<employes.size();i++)
+        {
+            afficheEmploye(employes.get(i));
+        }
         }
     
     public void showEmployes()
     {
         List<Employee> employes= employeDao.getAll();
-        // for (int i=0 ; i<employes.size();i++){
-        //     System.out.println("---------------------------------");
-        //     for(String keys: employes.get(i).keySet()){
-        //         System.out.println(keys+ " : "  +employes.get(i).get(keys));
-        //     }
-        // }
+        for(int i =0;i<employes.size();i++)
+        {
+            afficheEmploye(employes.get(i));
+        }
     }
     public void searchEmployeByMatricule()
     {
         System.out.print("Entrer le matricule de l'employe : ");
         Optional<Employee> employe = employeDao.SearchByRegistrationNumber(scanner.next());
 
-        // if(employe!=null)
-            //  for(String keys: employe.keySet()){
-            //      System.out.println("- "+ keys+ " : "  +employe.get(keys));
-            //  }
-        // else System.out.println("ce employe n'existe pas");
+        if(employe.isPresent())
+             afficheEmploye(employe.get());
+        else System.out.println("ce employe n'existe pas");
     }
 }
